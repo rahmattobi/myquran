@@ -41,6 +41,9 @@ class SplashScreenView extends GetView<SplashScreenController> {
                 height: 40,
               ),
               Lottie.asset('assets/lottie/splash_screen.json'),
+              const SizedBox(
+                height: 10,
+              ),
               Container(
                 height: 50,
                 margin: const EdgeInsets.only(
