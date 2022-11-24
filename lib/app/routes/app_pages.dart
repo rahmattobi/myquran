@@ -34,7 +34,7 @@ class AppPages {
       binding: DetailSurahBinding(),
     ),
     GetPage(
-      name: _Paths.last_read,
+      name: _Paths.lastRead,
       page: () => const LastReadView(),
       binding: LastReadBinding(),
     ),

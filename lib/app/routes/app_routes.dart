@@ -6,7 +6,7 @@ abstract class Routes {
   static const home = _Paths.home;
   static const splashScreen = _Paths.splashScreen;
   static const detailSurah = _Paths.detailSurah;
-  static const last_read = _Paths.last_read;
+  static const lastRead = _Paths.lastRead;
 }
 
 abstract class _Paths {
@@ -14,5 +14,5 @@ abstract class _Paths {
   static const home = '/home';
   static const splashScreen = '/splash-screen';
   static const detailSurah = '/detail-surah';
-  static const last_read = '/last-read';
+  static const lastRead = '/last-read';
 }

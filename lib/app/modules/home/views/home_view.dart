@@ -44,7 +44,7 @@ class HomeView extends GetView<HomeController> {
           children: [
             InkWell(
               onTap: () {
-                Get.toNamed(Routes.last_read);
+                Get.toNamed(Routes.lastRead);
               },
               child: SurahCard(
                 nama: "Surah Alfatihah",
