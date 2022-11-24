@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:myquran/app/data/models/detail_surah_m.dart' as detail;
-import 'package:myquran/app/modules/widget/surah_card.dart';
+import 'package:myquran/app/modules/widget/surah_tile.dart';
 import 'package:myquran/theme.dart';
 
 import '../../../data/models/surah_m.dart';
@@ -30,11 +30,38 @@ class DetailSurahView extends GetView<DetailSurahController> {
               left: defaultMargin - 5,
               top: 10,
             ),
-            child: SurahCard(
-              nama: data.name!.transliteration!.id,
-              arti: data.name!.translation!.id,
-              ayat: data.numberOfVerses.toString(),
-              type: data.revelation!.id,
+            child: InkWell(
+              onTap: () => Get.defaultDialog(
+                title: "Tafsir ${data.name!.transliteration!.id}",
+                titleStyle: titleTextStyle.copyWith(
+                  fontSize: 20,
+                  fontWeight: bold,
+                ),
+                content: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 8.0,
+                        right: 8.0,
+                        bottom: 8.0,
+                      ),
+                      child: Text(
+                        '${data.tafsir!.id}',
+                        style: subtitleTextStyle.copyWith(
+                          fontWeight: medium,
+                        ),
+                        textAlign: TextAlign.justify,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              child: SurahTile(
+                nama: data.name!.transliteration!.id,
+                arti: data.name!.translation!.id,
+                ayat: data.numberOfVerses.toString(),
+                type: data.revelation!.id,
+              ),
             ),
           ),
           const SizedBox(
@@ -60,8 +87,8 @@ class DetailSurahView extends GetView<DetailSurahController> {
 
               return ListView.builder(
                 padding: EdgeInsets.only(
-                  left: defaultMargin - 10,
-                  right: defaultMargin - 10,
+                  left: defaultMargin,
+                  right: defaultMargin,
                 ),
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -74,7 +101,13 @@ class DetailSurahView extends GetView<DetailSurahController> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Card(
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(
+                            5,
+                          ),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(
                             left: 5,
@@ -133,7 +166,7 @@ class DetailSurahView extends GetView<DetailSurahController> {
                       Text(
                         '${ayat.text!.transliteration!.en}',
                         style: titleTextStyle.copyWith(
-                          fontSize: 17,
+                          fontSize: 16,
                           fontWeight: regular,
                           fontStyle: FontStyle.italic,
                         ),
@@ -145,7 +178,7 @@ class DetailSurahView extends GetView<DetailSurahController> {
                       Text(
                         '${ayat.translation!.id}',
                         style: subtitleTextStyle.copyWith(
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: regular,
                         ),
                         textAlign: TextAlign.justify,

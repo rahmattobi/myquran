@@ -14,7 +14,7 @@ class DetailSurahController extends GetxController {
     Map<String, dynamic> data =
         (jsonDecode(res.body) as Map<String, dynamic>)["data"];
 
-    print(data);
+    // print(data);
 
     return DetailSurah.fromJson(data);
   }

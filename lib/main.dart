@@ -15,31 +15,40 @@ void main() {
   );
 }
 
-
 // Testing API
 
 // import 'dart:convert';
 
 // import 'package:http/http.dart' as http;
+// import 'package:myquran/app/data/models/ayat_m.dart';
 // import 'package:myquran/app/data/models/detail_surah_m.dart';
 // import 'package:myquran/app/data/models/surah_m.dart';
 
 // void main() async {
-//   Uri url = Uri.parse('https://api.quran.gading.dev/surah');
+  // Uri url = Uri.parse('https://api.quran.gading.dev/surah');
 
-//   var res = await http.get(url);
+  // var res = await http.get(url);
 
-//   List data = (jsonDecode(res.body) as Map<String, dynamic>)["data"];
+  // List data = (jsonDecode(res.body) as Map<String, dynamic>)["data"];
 
-//   Surah surah = Surah.fromJson(data[1]);
-//   // print(surah.number);
+  // Surah surah = Surah.fromJson(data[1]);
+  // // print(surah.number);
 
-//   Uri urls = Uri.parse('https://api.quran.gading.dev/surah/${surah.number}');
+  // Uri urls = Uri.parse('https://api.quran.gading.dev/surah/${surah.number}');
 
-//   var ress = await http.get(urls);
+  // var ress = await http.get(urls);
 
-//   Map<String, dynamic> datas = (jsonDecode(ress.body) as Map<String, dynamic>)["data"];
-//   DetailSurah detail = DetailSurah.fromJson(datas);
+  // Map<String, dynamic> datas = (jsonDecode(ress.body) as Map<String, dynamic>)["data"];
+  // DetailSurah detail = DetailSurah.fromJson(datas);
 
-//   print(detail.verses![0].text!.arab);
+  // ayat
+  // Uri urls = Uri.parse('https://api.quran.gading.dev/surah/114/1');
+
+  // var ress = await http.get(urls);
+
+  // Map<String, dynamic> datas =
+  //     (jsonDecode(ress.body) as Map<String, dynamic>)["data"];
+
+  // Ayat ayat = Ayat.fromJson(datas);
+  // print(ayat.text!.transliteration!.en);
 // }
