@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:myquran/app/data/models/juz_m.dart' as juz;
 import 'package:myquran/app/data/models/surah_m.dart';
 import '../../../routes/app_pages.dart';
 import '../../../../theme.dart';
@@ -151,56 +152,80 @@ class HomeView extends GetView<HomeController> {
                       );
                     },
                   ),
-                  ListView.builder(
-                    itemCount: 30,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        onTap: () {
-                          // Get.toNamed(
-                          //   Routes.detailSurah,
-                          //   arguments: surah,
-                          // );
-                        },
-                        leading: Container(
-                          width: 50,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage('assets/images/nomor.png'),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${index + 1}',
-                              style: subtitleTextStyle.copyWith(
-                                fontWeight: bold,
+                  FutureBuilder<List<juz.Juz>?>(
+                      future: controller.getAllJuz(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        // untuk mengcheck apakah ada data
+                        if (!snapshot.hasData) {
+                          return const Center(
+                            child: Text('Tidak Mempunyai data'),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: 30,
+                          itemBuilder: (context, index) {
+                            juz.Juz detailJuz = snapshot.data![index];
+                            return ListTile(
+                              onTap: () {
+                                Get.toNamed(
+                                  Routes.detailJuz,
+                                  arguments: detailJuz,
+                                );
+                              },
+                              leading: Container(
+                                width: 50,
+                                decoration: const BoxDecoration(
+                                  image: DecorationImage(
+                                    image:
+                                        AssetImage('assets/images/nomor.png'),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: subtitleTextStyle.copyWith(
+                                      fontWeight: bold,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          "Juz ${index + 1}",
-                          style: titleTextStyle.copyWith(
-                            fontWeight: medium,
-                            fontSize: 16,
-                          ),
-                        ),
-                        // subtitle: Text(
-                        //   "${surah.numberOfVerses} ayat | ${surah.revelation!.id}",
-                        //   style: subtitleTextStyle.copyWith(
-                        //     fontWeight: medium,
-                        //     fontSize: 12,
-                        //   ),
-                        // ),
-                        // trailing: Text(
-                        //   '${surah.name!.short}',
-                        //   style: primaryTextStyle.copyWith(
-                        //     fontWeight: bold,
-                        //     fontSize: 20,
-                        //   ),
-                        // ),
-                      );
-                    },
-                  ),
+                              title: Text(
+                                "Juz ${index + 1}",
+                                style: titleTextStyle.copyWith(
+                                  fontWeight: medium,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Mulai dari ${detailJuz.juzStartInfo} ',
+                                    style: subtitleTextStyle.copyWith(
+                                      fontWeight: medium,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Sampai ${detailJuz.juzEndInfo}',
+                                    style: subtitleTextStyle.copyWith(
+                                      fontWeight: medium,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }),
                   Center(
                     child: Text('data3'),
                   )

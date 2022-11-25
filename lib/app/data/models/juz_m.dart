@@ -1,7 +1,5 @@
 class Juz {
   int? juz;
-  int? juzStartSurahNumber;
-  int? juzEndSurahNumber;
   String? juzStartInfo;
   String? juzEndInfo;
   int? totalVerses;
@@ -9,23 +7,19 @@ class Juz {
 
   Juz(
       {juz,
-      juzStartSurahNumber,
-      juzEndSurahNumber,
       juzStartInfo,
       juzEndInfo,
       totalVerses,
       verses});
 
-  Juz.fromJson(Map<String, dynamic> json) {
-    juz = json['juz'];
-    juzStartSurahNumber = json['juzStartSurahNumber'];
-    juzEndSurahNumber = json['juzEndSurahNumber'];
-    juzStartInfo = json['juzStartInfo'];
-    juzEndInfo = json['juzEndInfo'];
-    totalVerses = json['totalVerses'];
-    if (json['verses'] != null) {
+  Juz.fromJson(Map<String, dynamic>? json) {
+    juz = json?['juz'];
+    juzStartInfo = json?['juzStartInfo'];
+    juzEndInfo = json?['juzEndInfo'];
+    totalVerses = json?['totalVerses'];
+    if (json?['verses'] != null) {
       verses = <Verses>[];
-      json['verses'].forEach((v) {
+      json?['verses'].forEach((v) {
         verses!.add(Verses.fromJson(v));
       });
     }
@@ -34,8 +28,6 @@ class Juz {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['juz'] = juz;
-    data['juzStartSurahNumber'] = juzStartSurahNumber;
-    data['juzEndSurahNumber'] = juzEndSurahNumber;
     data['juzStartInfo'] = juzStartInfo;
     data['juzEndInfo'] = juzEndInfo;
     data['totalVerses'] = totalVerses;
@@ -54,29 +46,21 @@ class Verses {
   Audio? audio;
   Tafsir? tafsir;
 
-  Verses(
-      {number,
-      meta,
-      text,
-      translation,
-      audio,
-      tafsir});
+  Verses({number, meta, text, translation, audio, tafsir});
 
   Verses.fromJson(Map<String, dynamic> json) {
-    number =
-        json['number'] != null ?  Number.fromJson(json['number']) : null;
-    meta = json['meta'] != null ?  Meta.fromJson(json['meta']) : null;
-    text = json['text'] != null ?  Text.fromJson(json['text']) : null;
+    number = json['number'] != null ? Number.fromJson(json['number']) : null;
+    meta = json['meta'] != null ? Meta.fromJson(json['meta']) : null;
+    text = json['text'] != null ? Text.fromJson(json['text']) : null;
     translation = json['translation'] != null
-        ?  Translation.fromJson(json['translation'])
+        ? Translation.fromJson(json['translation'])
         : null;
-    audio = json['audio'] != null ?  Audio.fromJson(json['audio']) : null;
-    tafsir =
-        json['tafsir'] != null ?  Tafsir.fromJson(json['tafsir']) : null;
+    audio = json['audio'] != null ? Audio.fromJson(json['audio']) : null;
+    tafsir = json['tafsir'] != null ? Tafsir.fromJson(json['tafsir']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (number != null) {
       data['number'] = number!.toJson();
     }
@@ -111,7 +95,7 @@ class Number {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['inQuran'] = inQuran;
     data['inSurah'] = inSurah;
     return data;
@@ -126,13 +110,7 @@ class Meta {
   int? hizbQuarter;
   Sajda? sajda;
 
-  Meta(
-      {juz,
-      page,
-      manzil,
-      ruku,
-      hizbQuarter,
-      sajda});
+  Meta({juz, page, manzil, ruku, hizbQuarter, sajda});
 
   Meta.fromJson(Map<String, dynamic> json) {
     juz = json['juz'];
@@ -140,11 +118,11 @@ class Meta {
     manzil = json['manzil'];
     ruku = json['ruku'];
     hizbQuarter = json['hizbQuarter'];
-    sajda = json['sajda'] != null ?  Sajda.fromJson(json['sajda']) : null;
+    sajda = json['sajda'] != null ? Sajda.fromJson(json['sajda']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['juz'] = juz;
     data['page'] = page;
     data['manzil'] = manzil;
@@ -169,7 +147,7 @@ class Sajda {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['recommended'] = recommended;
     data['obligatory'] = obligatory;
     return data;
@@ -185,12 +163,12 @@ class Text {
   Text.fromJson(Map<String, dynamic> json) {
     arab = json['arab'];
     transliteration = json['transliteration'] != null
-        ?  Transliteration.fromJson(json['transliteration'])
+        ? Transliteration.fromJson(json['transliteration'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['arab'] = arab;
     if (transliteration != null) {
       data['transliteration'] = transliteration!.toJson();
@@ -209,7 +187,7 @@ class Transliteration {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['en'] = en;
     return data;
   }
@@ -227,7 +205,7 @@ class Translation {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['en'] = en;
     data['id'] = id;
     return data;
@@ -246,7 +224,7 @@ class Audio {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['primary'] = primary;
     data['secondary'] = secondary;
     return data;
@@ -259,11 +237,11 @@ class Tafsir {
   Tafsir({id});
 
   Tafsir.fromJson(Map<String, dynamic> json) {
-    id = json['id'] != null ?  Id.fromJson(json['id']) : null;
+    id = json['id'] != null ? Id.fromJson(json['id']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (id != null) {
       data['id'] = id!.toJson();
     }
@@ -283,7 +261,7 @@ class Id {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['short'] = short;
     data['long'] = long;
     return data;

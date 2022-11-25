@@ -17,7 +17,7 @@ class DetailSurahView extends GetView<DetailSurahController> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Surah ${data.name!.transliteration!.id}'),
-        centerTitle: false,
+        centerTitle: true,
         elevation: 0,
         backgroundColor: whiteColor,
         foregroundColor: primaryColor,

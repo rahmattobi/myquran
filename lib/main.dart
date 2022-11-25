@@ -1,31 +1,31 @@
-// import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
-// import 'package:get/get.dart';
+import 'package:get/get.dart';
 
-// import 'app/routes/app_pages.dart';
+import 'app/routes/app_pages.dart';
 
-// void main() {
-//   runApp(
-//     GetMaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: "Application",
-//       initialRoute: AppPages.splashScreen,
-//       getPages: AppPages.routes,
-//     ),
-//   );
-// }
+void main() {
+  runApp(
+    GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Application",
+      initialRoute: AppPages.splashScreen,
+      getPages: AppPages.routes,
+    ),
+  );
+}
 
 // Testing API
 
-import 'dart:convert';
+// import 'dart:convert';
 
-import 'package:http/http.dart' as http;
-import 'package:myquran/app/data/models/ayat_m.dart';
-import 'package:myquran/app/data/models/detail_surah_m.dart';
-import 'package:myquran/app/data/models/juz_m.dart';
-import 'package:myquran/app/data/models/surah_m.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:myquran/app/data/models/ayat_m.dart';
+// import 'package:myquran/app/data/models/detail_surah_m.dart';
+// import 'package:myquran/app/data/models/juz_m.dart';
+// import 'package:myquran/app/data/models/surah_m.dart';
 
-void main() async {
+// void main() async {
   // Uri url = Uri.parse('https://api.quran.gading.dev/surah');
 
   // var res = await http.get(url);
@@ -67,4 +67,4 @@ void main() async {
   //   juz.add(allJuz);
   // }
   // return juz;
-}
+// }
