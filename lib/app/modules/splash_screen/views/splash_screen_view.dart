@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../theme.dart';
@@ -23,6 +24,7 @@ class SplashScreenView extends GetView<SplashScreenController> {
               Text(
                 'Qur\'anku',
                 style: primaryTextStyle.copyWith(
+                  color: Get.isDarkMode ? whiteColor : primaryColor,
                   fontSize: 24,
                   fontWeight: bold,
                 ),
@@ -33,7 +35,8 @@ class SplashScreenView extends GetView<SplashScreenController> {
               Text(
                 'Learn Quran and \n Recite once everyday',
                 style: subtitleTextStyle.copyWith(
-                  fontSize: 18,
+                  fontSize: 16,
+                  color: subtitleColor,
                 ),
                 textAlign: TextAlign.center,
               ),

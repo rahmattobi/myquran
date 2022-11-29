@@ -14,35 +14,99 @@ class HomeView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Obx(
+            () => Switch(
+              onChanged: (val) {
+                controller.toggle();
+                Get.changeTheme(
+                  Get.isDarkMode ? lightTheme : darkTheme,
+                );
+              },
+              activeColor: darkColor,
+              activeTrackColor: primaryColor,
+              activeThumbImage: const AssetImage('assets/images/dark.png'),
+              inactiveThumbImage: const AssetImage('assets/images/light.png'),
+              value: controller.isDark.value,
+            ),
+          )
+        ],
+        centerTitle: true,
         elevation: 0,
-        centerTitle: false,
-        backgroundColor: whiteColor,
-        title: Row(
-          children: [
-            const SizedBox(
-              width: 10,
-            ),
-            Expanded(
-              child: Text(
-                'My Qur\'an',
-                style: primaryTextStyle.copyWith(
-                  fontSize: 20,
-                  fontWeight: bold,
-                ),
-              ),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.search),
-              color: Colors.grey,
-            ),
-          ],
+        title: Text(
+          'My Qur\'an',
+          style: primaryTextStyle.copyWith(
+            fontSize: 20,
+            fontWeight: bold,
+          ),
         ),
       ),
       body: DefaultTabController(
         length: 3,
         child: Column(
           children: [
+            Obx(
+              () => Container(
+                height: 60,
+                margin: EdgeInsets.only(
+                  top: 10,
+                  left: defaultMargin - 10,
+                  right: defaultMargin - 10,
+                ),
+                decoration: BoxDecoration(
+                  color: controller.isDark.isTrue ? darkColor : whiteColor,
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                      color: controller.isDark.isTrue
+                          ? primaryColor.withOpacity(0.3)
+                          : subtitleColor.withOpacity(0.3),
+                    ),
+                  ],
+                ),
+                child: Container(
+                  height: 60,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 5,
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.search,
+                        color: controller.isDark.isTrue
+                            ? whiteColor
+                            : subtitleColor,
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration.collapsed(
+                            hintText: 'Cari Doa',
+                            hintStyle: subtitleTextStyle.copyWith(
+                              fontSize: 15,
+                              color: controller.isDark.isTrue
+                                  ? whiteColor
+                                  : subtitleColor,
+                            ),
+                          ),
+                          onChanged: ((value) {
+                            // searchDoa(value);
+                          }),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             InkWell(
               onTap: () {
                 Get.toNamed(Routes.lastRead);
@@ -59,25 +123,30 @@ class HomeView extends GetView<HomeController> {
               margin: EdgeInsets.symmetric(
                 horizontal: defaultMargin,
               ),
-              child: TabBar(
-                labelColor: primaryColor,
-                indicatorColor: primaryColor,
-                unselectedLabelColor: subtitleColor,
-                labelStyle: primaryTextStyle.copyWith(
-                  fontWeight: semiBold,
-                  fontSize: 16,
+              child: Obx(
+                () => TabBar(
+                  labelColor:
+                      controller.isDark.isTrue ? whiteColor : primaryColor,
+                  indicatorColor:
+                      controller.isDark.isTrue ? whiteColor : primaryColor,
+                  unselectedLabelColor:
+                      controller.isDark.isTrue ? primaryColor : subtitleColor,
+                  labelStyle: primaryTextStyle.copyWith(
+                    fontWeight: semiBold,
+                    fontSize: 16,
+                  ),
+                  tabs: const [
+                    Tab(
+                      text: 'Surah',
+                    ),
+                    Tab(
+                      text: 'Juz',
+                    ),
+                    Tab(
+                      text: 'Bookmark',
+                    ),
+                  ],
                 ),
-                tabs: const [
-                  Tab(
-                    text: 'Surah',
-                  ),
-                  Tab(
-                    text: 'Juz',
-                  ),
-                  Tab(
-                    text: 'Bookmark',
-                  ),
-                ],
               ),
             ),
             Expanded(
@@ -110,18 +179,23 @@ class HomeView extends GetView<HomeController> {
                                 arguments: surah,
                               );
                             },
-                            leading: Container(
-                              width: 50,
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/nomor.png'),
+                            leading: Obx(
+                              () => CircleAvatar(
+                                radius: index + 1 > 99 ? 28 : 23,
+                                backgroundImage: AssetImage(
+                                  controller.isDark.isTrue
+                                      ? 'assets/images/nomor2.png'
+                                      : 'assets/images/nomor3.png',
                                 ),
-                              ),
-                              child: Center(
+                                backgroundColor: Colors.transparent,
                                 child: Text(
-                                  '${surah.number!}',
-                                  style: subtitleTextStyle.copyWith(
+                                  '${index + 1}',
+                                  style: titleTextStyle.copyWith(
                                     fontWeight: bold,
+                                    fontSize: 12,
+                                    color: controller.isDark.isTrue
+                                        ? whiteColor
+                                        : subtitleColor,
                                   ),
                                 ),
                               ),
@@ -179,19 +253,23 @@ class HomeView extends GetView<HomeController> {
                                   arguments: detailJuz,
                                 );
                               },
-                              leading: Container(
-                                width: 50,
-                                decoration: const BoxDecoration(
-                                  image: DecorationImage(
-                                    image:
-                                        AssetImage('assets/images/nomor.png'),
+                              leading: Obx(
+                                () => CircleAvatar(
+                                  radius: index + 1 > 99 ? 28 : 23,
+                                  backgroundImage: AssetImage(
+                                    controller.isDark.isTrue
+                                        ? 'assets/images/nomor2.png'
+                                        : 'assets/images/nomor3.png',
                                   ),
-                                ),
-                                child: Center(
+                                  backgroundColor: Colors.transparent,
                                   child: Text(
                                     '${index + 1}',
-                                    style: subtitleTextStyle.copyWith(
+                                    style: titleTextStyle.copyWith(
                                       fontWeight: bold,
+                                      fontSize: 12,
+                                      color: controller.isDark.isTrue
+                                          ? whiteColor
+                                          : subtitleColor,
                                     ),
                                   ),
                                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:myquran/app/data/models/detail_surah_m.dart' as detail;
+import 'package:myquran/app/modules/home/controllers/home_controller.dart';
 import 'package:myquran/app/modules/widget/surah_tile.dart';
 import 'package:myquran/theme.dart';
 
@@ -12,15 +13,20 @@ class DetailSurahView extends GetView<DetailSurahController> {
   DetailSurahView({super.key});
 
   final Surah data = Get.arguments;
+  var homeC = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Surah ${data.name!.transliteration!.id}'),
+        title: Text(
+          'Surah ${data.name!.transliteration!.id}',
+          style: titleTextStyle.copyWith(
+            fontSize: 18,
+            fontWeight: bold,
+          ),
+        ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: whiteColor,
-        foregroundColor: primaryColor,
       ),
       body: ListView(
         children: [
@@ -103,7 +109,9 @@ class DetailSurahView extends GetView<DetailSurahController> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[200],
+                          color: homeC.isDark.isTrue
+                              ? primaryColor.withOpacity(0.2)
+                              : Colors.grey[200],
                           borderRadius: BorderRadius.circular(
                             5,
                           ),
@@ -116,14 +124,21 @@ class DetailSurahView extends GetView<DetailSurahController> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               CircleAvatar(
-                                backgroundImage:
-                                    const AssetImage('assets/images/nomor.png'),
+                                radius: index + 1 > 99 ? 28 : 23,
+                                backgroundImage: AssetImage(
+                                  homeC.isDark.isTrue
+                                      ? 'assets/images/nomor2.png'
+                                      : 'assets/images/nomor3.png',
+                                ),
                                 backgroundColor: Colors.transparent,
-                                maxRadius: 16,
                                 child: Text(
                                   '${index + 1}',
                                   style: titleTextStyle.copyWith(
-                                    fontWeight: medium,
+                                    fontWeight: bold,
+                                    fontSize: 12,
+                                    color: homeC.isDark.isTrue
+                                        ? whiteColor
+                                        : subtitleColor,
                                   ),
                                 ),
                               ),
@@ -131,16 +146,20 @@ class DetailSurahView extends GetView<DetailSurahController> {
                                 children: [
                                   IconButton(
                                     onPressed: () {},
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.play_arrow_outlined,
-                                      color: Colors.green,
+                                      color: homeC.isDark.isTrue
+                                          ? whiteColor
+                                          : Colors.green,
                                     ),
                                   ),
                                   IconButton(
                                     onPressed: () {},
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.bookmark_border,
-                                      color: Colors.green,
+                                      color: homeC.isDark.isTrue
+                                          ? whiteColor
+                                          : Colors.green,
                                     ),
                                   )
                                 ],
@@ -165,7 +184,7 @@ class DetailSurahView extends GetView<DetailSurahController> {
                       ),
                       Text(
                         '${ayat.text!.transliteration!.en}',
-                        style: titleTextStyle.copyWith(
+                        style: primaryTextStyle.copyWith(
                           fontSize: 16,
                           fontWeight: regular,
                           fontStyle: FontStyle.italic,
