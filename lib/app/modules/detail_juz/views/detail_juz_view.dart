@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:myquran/app/data/models/juz_m.dart' as detailjuz;
+import 'package:myquran/app/data/models/surah_m.dart';
 import 'package:myquran/theme.dart';
 
 import '../../home/controllers/home_controller.dart';
+import '../../widget/surah_tile.dart';
 import '../controllers/detail_juz_controller.dart';
 
 class DetailJuzView extends GetView<DetailJuzController> {
   DetailJuzView({Key? key}) : super(key: key);
 
-  final detailjuz.Juz juzD = Get.arguments;
   var homeC = Get.find<HomeController>();
-
+  final List<Surah> allSurahInJuz = Get.arguments["surah"];
+  final detailjuz.Juz juzD = Get.arguments["juz"];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,9 +45,103 @@ class DetailJuzView extends GetView<DetailJuzController> {
 
             detailjuz.Verses ayat = juzD.verses![index];
 
+            //menset index dari surah di dalam juz
+            if (index != 0) {
+              if (ayat.number!.inSurah == 1) {
+                controller.index++;
+              }
+            }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                if (ayat.number!.inSurah == 1)
+                  // Container(
+                  //   height: 120,
+                  //   width: double.infinity,
+                  //   padding: const EdgeInsets.symmetric(vertical: 10),
+                  //   decoration: BoxDecoration(
+                  //     borderRadius: BorderRadius.circular(5),
+                  //     gradient: LinearGradient(
+                  //       begin: Alignment.topRight,
+                  //       end: Alignment.bottomLeft,
+                  //       colors: [
+                  //         primaryColor,
+                  //         const Color.fromARGB(255, 12, 88, 88),
+                  //       ],
+                  //     ),
+                  //     color: primaryColor,
+                  //   ),
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Text(
+                  //         allSurahInJuz[controller.index]
+                  //                 .name
+                  //                 ?.translation!
+                  //                 .id ??
+                  //             '',
+                  //         style: titleTextStyle.copyWith(
+                  //           fontWeight: semiBold,
+                  //           fontSize: 20,
+                  //           color: whiteColor,
+                  //         ),
+                  //       ),
+                  //       Divider(
+                  //         color: subtitleColor.withOpacity(0.5),
+                  //         thickness: 1.5,
+                  //       ),
+                  //       const SizedBox(
+                  //         height: 5,
+                  //       ),
+                  //       Image.asset(
+                  //         'assets/images/bismillah.png',
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  InkWell(
+                    onTap: () => Get.defaultDialog(
+                      title:
+                          "Tafsir ${allSurahInJuz[controller.index].name?.transliteration!.id ?? ''}",
+                      titleStyle: titleTextStyle.copyWith(
+                        fontSize: 20,
+                        fontWeight: bold,
+                      ),
+                      content: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 8.0,
+                              right: 8.0,
+                              bottom: 8.0,
+                            ),
+                            child: Text(
+                              '${allSurahInJuz[controller.index].tafsir!.id}',
+                              style: subtitleTextStyle.copyWith(
+                                fontWeight: medium,
+                              ),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    child: SurahTile(
+                      nama: allSurahInJuz[controller.index]
+                          .name!
+                          .transliteration!
+                          .id,
+                      arti:
+                          allSurahInJuz[controller.index].name!.translation!.id,
+                      ayat: allSurahInJuz[controller.index]
+                          .numberOfVerses
+                          .toString(),
+                      type: allSurahInJuz[controller.index].revelation!.id,
+                    ),
+                  ),
+                const SizedBox(
+                  height: 20,
+                ),
                 Container(
                   decoration: BoxDecoration(
                     color: homeC.isDark.isTrue
@@ -71,7 +167,7 @@ class DetailJuzView extends GetView<DetailJuzController> {
                           ),
                           backgroundColor: Colors.transparent,
                           child: Text(
-                            '${index + 1}',
+                            '${ayat.number!.inSurah}',
                             style: titleTextStyle.copyWith(
                               fontWeight: bold,
                               fontSize: 12,
@@ -132,6 +228,7 @@ class DetailJuzView extends GetView<DetailJuzController> {
                       style: primaryTextStyle.copyWith(
                         fontWeight: medium,
                         fontSize: 16,
+                        color: primaryColor,
                         fontStyle: FontStyle.italic,
                       ),
                       textAlign: TextAlign.justify,

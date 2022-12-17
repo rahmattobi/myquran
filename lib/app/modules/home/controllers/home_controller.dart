@@ -7,13 +7,12 @@ import 'package:myquran/app/data/models/juz_m.dart';
 import '../../../data/models/surah_m.dart';
 
 class HomeController extends GetxController {
-
   RxBool isDark = false.obs; // our observable
 
   // swap true/false & save it to observable
   void toggle() => isDark.value = isDark.value ? false : true;
 
-
+  List<Surah> allSurah = [];
   Future<List<Surah>?> getAllSurah() async {
     Uri url = Uri.parse('https://api.quran.gading.dev/surah');
 
@@ -24,7 +23,8 @@ class HomeController extends GetxController {
     if (data.isEmpty) {
       return [];
     } else {
-      return data.map((e) => Surah.fromJson(e)).toList();
+      allSurah = data.map((e) => Surah.fromJson(e)).toList();
+      return allSurah;
     }
   }
 
@@ -40,7 +40,7 @@ class HomeController extends GetxController {
 
       Juz allJuz = Juz.fromJson(data);
 
-      juz.add(allJuz);  
+      juz.add(allJuz);
     }
     return juz;
   }

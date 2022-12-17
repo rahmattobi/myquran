@@ -187,6 +187,7 @@ class DetailSurahView extends GetView<DetailSurahController> {
                         style: primaryTextStyle.copyWith(
                           fontSize: 16,
                           fontWeight: regular,
+                          color: primaryColor,
                           fontStyle: FontStyle.italic,
                         ),
                         textAlign: TextAlign.justify,

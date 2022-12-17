@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myquran/app/data/models/juz_m.dart' as juz;
 import 'package:myquran/app/data/models/surah_m.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../routes/app_pages.dart';
 import '../../../../theme.dart';
 import '../../widget/surah_card.dart';
@@ -156,8 +157,29 @@ class HomeView extends GetView<HomeController> {
                     future: controller.getAllSurah(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey,
+                              highlightColor: subtitleColor,
+                              child: ListTile(
+                                leading: const CircleAvatar(),
+                                title: Container(
+                                  height: 20,
+                                  color: whiteColor,
+                                ),
+                                subtitle: Container(
+                                  height: 10,
+                                  color: whiteColor,
+                                ),
+                                trailing: Container(
+                                  height: 20,
+                                  color: whiteColor,
+                                  width: 50,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       }
 
@@ -231,8 +253,24 @@ class HomeView extends GetView<HomeController> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
+                          return ListView.builder(
+                            itemBuilder: (context, index) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey,
+                                highlightColor: subtitleColor,
+                                child: ListTile(
+                                  leading: const CircleAvatar(),
+                                  title: Container(
+                                    height: 20,
+                                    color: whiteColor,
+                                  ),
+                                  subtitle: Container(
+                                    height: 10,
+                                    color: whiteColor,
+                                  ),
+                                ),
+                              );
+                            },
                           );
                         }
 
@@ -246,11 +284,40 @@ class HomeView extends GetView<HomeController> {
                           itemCount: 30,
                           itemBuilder: (context, index) {
                             juz.Juz detailJuz = snapshot.data![index];
+
+                            //Get surah in juz
+                            String surahStart =
+                                detailJuz.juzStartInfo?.split(" - ").first ??
+                                    "";
+                            String surahEnd =
+                                detailJuz.juzEndInfo?.split(" - ").first ?? "";
+
+                            List<Surah> allSurahinJuz = [];
+                            List<Surah> rawSurahinJuz = [];
+
+                            for (Surah item in controller.allSurah) {
+                              rawSurahinJuz.add(item);
+                              if (item.name!.transliteration!.id == surahEnd) {
+                                break;
+                              }
+                            }
+
+                            for (Surah item
+                                in rawSurahinJuz.reversed.toList()) {
+                              allSurahinJuz.add(item);
+                              if (item.name!.transliteration!.id ==
+                                  surahStart) {
+                                break;
+                              }
+                            }
                             return ListTile(
                               onTap: () {
                                 Get.toNamed(
                                   Routes.detailJuz,
-                                  arguments: detailJuz,
+                                  arguments: {
+                                    "juz": detailJuz,
+                                    "surah": allSurahinJuz.reversed.toList(),
+                                  },
                                 );
                               },
                               leading: Obx(
