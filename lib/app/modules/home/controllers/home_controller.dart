@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:myquran/app/data/models/juz_m.dart';
+import 'package:myquran/theme.dart';
 
 import '../../../data/models/surah_m.dart';
 
@@ -10,7 +12,17 @@ class HomeController extends GetxController {
   RxBool isDark = false.obs; // our observable
 
   // swap true/false & save it to observable
-  void toggle() => isDark.value = isDark.value ? false : true;
+  void toggle() async {
+    Get.isDarkMode ? Get.changeTheme(lightTheme) : Get.changeTheme(darkTheme);
+    isDark.toggle();
+    final box = GetStorage();
+
+    if (Get.isDarkMode) {
+      box.remove("themeDark");
+    } else {
+      box.write("themeDark", true);
+    }
+  }
 
   List<Surah> allSurah = [];
   Future<List<Surah>?> getAllSurah() async {

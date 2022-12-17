@@ -9,6 +9,7 @@ import '../../home/controllers/home_controller.dart';
 import '../../widget/surah_tile.dart';
 import '../controllers/detail_juz_controller.dart';
 
+// ignore: must_be_immutable
 class DetailJuzView extends GetView<DetailJuzController> {
   DetailJuzView({Key? key}) : super(key: key);
 

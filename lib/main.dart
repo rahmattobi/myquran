@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'theme.dart';
 import 'package:get/get.dart';
 
 import 'app/routes/app_pages.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
+  final box = GetStorage();
   runApp(
     GetMaterialApp(
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: box.read("themeDark") == null ? lightTheme : darkTheme,
       debugShowCheckedModeBanner: false,
       title: "Application",
       initialRoute: AppPages.home,

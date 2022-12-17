@@ -13,7 +13,7 @@ class LastReadView extends GetView<LastReadController> {
         title: const Text('LastReadView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'LastReadView is working',
           style: TextStyle(fontSize: 20),

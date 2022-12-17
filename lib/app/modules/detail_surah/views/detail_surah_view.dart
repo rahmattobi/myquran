@@ -9,6 +9,7 @@ import 'package:myquran/theme.dart';
 import '../../../data/models/surah_m.dart';
 import '../controllers/detail_surah_controller.dart';
 
+// ignore: must_be_immutable
 class DetailSurahView extends GetView<DetailSurahController> {
   DetailSurahView({super.key});
 

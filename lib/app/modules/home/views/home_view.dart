@@ -13,17 +13,15 @@ class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    if (Get.isDarkMode) {
+      controller.isDark.value = true;
+    }
     return Scaffold(
       appBar: AppBar(
         actions: [
           Obx(
             () => Switch(
-              onChanged: (val) {
-                controller.toggle();
-                Get.changeTheme(
-                  Get.isDarkMode ? lightTheme : darkTheme,
-                );
-              },
+              onChanged: (val) => controller.toggle(),
               activeColor: darkColor,
               activeTrackColor: primaryColor,
               activeThumbImage: const AssetImage('assets/images/dark.png'),
@@ -371,7 +369,7 @@ class HomeView extends GetView<HomeController> {
                           },
                         );
                       }),
-                  Center(
+                  const Center(
                     child: Text('data3'),
                   )
                 ],
