@@ -5,12 +5,7 @@ class Juz {
   int? totalVerses;
   List<Verses>? verses;
 
-  Juz(
-      {juz,
-      juzStartInfo,
-      juzEndInfo,
-      totalVerses,
-      verses});
+  Juz({juz, juzStartInfo, juzEndInfo, totalVerses, verses});
 
   Juz.fromJson(Map<String, dynamic>? json) {
     juz = json?['juz'];
@@ -45,8 +40,9 @@ class Verses {
   Translation? translation;
   Audio? audio;
   Tafsir? tafsir;
+  String? statusAudio = "stop";
 
-  Verses({number, meta, text, translation, audio, tafsir});
+  Verses({number, meta, text, translation, audio, tafsir, statusAudio});
 
   Verses.fromJson(Map<String, dynamic> json) {
     number = json['number'] != null ? Number.fromJson(json['number']) : null;
@@ -78,6 +74,9 @@ class Verses {
     }
     if (tafsir != null) {
       data['tafsir'] = tafsir!.toJson();
+    }
+    if (statusAudio != null) {
+      data['statusAudio'] = statusAudio;
     }
     return data;
   }

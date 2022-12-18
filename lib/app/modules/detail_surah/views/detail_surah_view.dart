@@ -143,27 +143,77 @@ class DetailSurahView extends GetView<DetailSurahController> {
                                   ),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.play_arrow_outlined,
-                                      color: homeC.isDark.isTrue
-                                          ? whiteColor
-                                          : Colors.green,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      Icons.bookmark_border,
-                                      color: homeC.isDark.isTrue
-                                          ? whiteColor
-                                          : Colors.green,
-                                    ),
-                                  )
-                                ],
+                              GetBuilder<DetailSurahController>(
+                                init: DetailSurahController(),
+                                initState: (_) {},
+                                builder: (c) {
+                                  return Row(
+                                    children: [
+                                      (ayat!.statusAudio == "stop")
+                                          ? IconButton(
+                                              onPressed: () {
+                                                c.playAudio(ayat);
+                                              },
+                                              icon: Icon(
+                                                Icons.play_arrow_outlined,
+                                                color: homeC.isDark.isTrue
+                                                    ? whiteColor
+                                                    : Colors.green,
+                                              ),
+                                            )
+                                          : Row(
+                                              children: [
+                                                (ayat.statusAudio == "playing")
+                                                    ? IconButton(
+                                                        onPressed: () {
+                                                          c.pauseAudio(ayat);
+                                                        },
+                                                        icon: Icon(
+                                                          Icons.pause,
+                                                          color: homeC
+                                                                  .isDark.isTrue
+                                                              ? whiteColor
+                                                              : Colors.green,
+                                                        ),
+                                                      )
+                                                    : IconButton(
+                                                        onPressed: () {
+                                                          c.resumeAudio(ayat);
+                                                        },
+                                                        icon: Icon(
+                                                          Icons
+                                                              .play_arrow_outlined,
+                                                          color: homeC
+                                                                  .isDark.isTrue
+                                                              ? whiteColor
+                                                              : Colors.green,
+                                                        ),
+                                                      ),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    c.stopAudio(ayat);
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.stop,
+                                                    color: homeC.isDark.isTrue
+                                                        ? whiteColor
+                                                        : Colors.green,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                      IconButton(
+                                        onPressed: () {},
+                                        icon: Icon(
+                                          Icons.bookmark_border,
+                                          color: homeC.isDark.isTrue
+                                              ? whiteColor
+                                              : Colors.green,
+                                        ),
+                                      )
+                                    ],
+                                  );
+                                },
                               ),
                             ],
                           ),

@@ -56,50 +56,6 @@ class DetailJuzView extends GetView<DetailJuzController> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 if (ayat.number!.inSurah == 1)
-                  // Container(
-                  //   height: 120,
-                  //   width: double.infinity,
-                  //   padding: const EdgeInsets.symmetric(vertical: 10),
-                  //   decoration: BoxDecoration(
-                  //     borderRadius: BorderRadius.circular(5),
-                  //     gradient: LinearGradient(
-                  //       begin: Alignment.topRight,
-                  //       end: Alignment.bottomLeft,
-                  //       colors: [
-                  //         primaryColor,
-                  //         const Color.fromARGB(255, 12, 88, 88),
-                  //       ],
-                  //     ),
-                  //     color: primaryColor,
-                  //   ),
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       Text(
-                  //         allSurahInJuz[controller.index]
-                  //                 .name
-                  //                 ?.translation!
-                  //                 .id ??
-                  //             '',
-                  //         style: titleTextStyle.copyWith(
-                  //           fontWeight: semiBold,
-                  //           fontSize: 20,
-                  //           color: whiteColor,
-                  //         ),
-                  //       ),
-                  //       Divider(
-                  //         color: subtitleColor.withOpacity(0.5),
-                  //         thickness: 1.5,
-                  //       ),
-                  //       const SizedBox(
-                  //         height: 5,
-                  //       ),
-                  //       Image.asset(
-                  //         'assets/images/bismillah.png',
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   InkWell(
                     onTap: () => Get.defaultDialog(
                       title:
@@ -178,27 +134,74 @@ class DetailJuzView extends GetView<DetailJuzController> {
                             ),
                           ),
                         ),
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.play_arrow_outlined,
-                                color: homeC.isDark.isTrue
-                                    ? whiteColor
-                                    : Colors.green,
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.bookmark_border,
-                                color: homeC.isDark.isTrue
-                                    ? whiteColor
-                                    : Colors.green,
-                              ),
-                            )
-                          ],
+                        GetBuilder<DetailJuzController>(
+                          init: DetailJuzController(),
+                          initState: (_) {},
+                          builder: (c) {
+                            return Row(
+                              children: [
+                                (ayat.statusAudio == "stop")
+                                    ? IconButton(
+                                        onPressed: () {
+                                          c.playAudio(ayat);
+                                        },
+                                        icon: Icon(
+                                          Icons.play_arrow_outlined,
+                                          color: homeC.isDark.isTrue
+                                              ? whiteColor
+                                              : Colors.green,
+                                        ),
+                                      )
+                                    : Row(
+                                        children: [
+                                          (ayat.statusAudio == "playing")
+                                              ? IconButton(
+                                                  onPressed: () {
+                                                    c.pauseAudio(ayat);
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.pause,
+                                                    color: homeC.isDark.isTrue
+                                                        ? whiteColor
+                                                        : Colors.green,
+                                                  ),
+                                                )
+                                              : IconButton(
+                                                  onPressed: () {
+                                                    c.resumeAudio(ayat);
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.play_arrow_outlined,
+                                                    color: homeC.isDark.isTrue
+                                                        ? whiteColor
+                                                        : Colors.green,
+                                                  ),
+                                                ),
+                                          IconButton(
+                                            onPressed: () {
+                                              c.stopAudio(ayat);
+                                            },
+                                            icon: Icon(
+                                              Icons.stop,
+                                              color: homeC.isDark.isTrue
+                                                  ? whiteColor
+                                                  : Colors.green,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.bookmark_border,
+                                    color: homeC.isDark.isTrue
+                                        ? whiteColor
+                                        : Colors.green,
+                                  ),
+                                )
+                              ],
+                            );
+                          },
                         ),
                       ],
                     ),
