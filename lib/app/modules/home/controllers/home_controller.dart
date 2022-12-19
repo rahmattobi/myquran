@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:myquran/app/data/models/db/bookmark.dart';
 import 'package:myquran/app/data/models/juz_m.dart';
 import 'package:myquran/theme.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../../data/models/surah_m.dart';
 
@@ -22,6 +24,18 @@ class HomeController extends GetxController {
     } else {
       box.write("themeDark", true);
     }
+  }
+
+  // Get Bookmark from Sqflite
+  DatabaseManager dbM = DatabaseManager.instance;
+
+  Future<List<Map<String, dynamic>>?> getAllBookmark() async {
+    Database db = await dbM.db;
+    List<Map<String, dynamic>> allBookmark = await db.query(
+      "bookmark",
+      where: "last_read = 0",
+    );
+    return allBookmark;
   }
 
   List<Surah> allSurah = [];

@@ -369,8 +369,58 @@ class HomeView extends GetView<HomeController> {
                           },
                         );
                       }),
-                  const Center(
-                    child: Text('data3'),
+                  GetBuilder<HomeController>(
+                    builder: (c) {
+                      return FutureBuilder<List<Map<String, dynamic>>?>(
+                        future: c.getAllBookmark(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          if (snapshot.data!.isEmpty) {
+                            return const Center(
+                              child: Text('Bookmark belum tersedia'),
+                            );
+                          }
+                          return ListView.builder(
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> data = snapshot.data![index];
+                              return ListTile(
+                                leading: Obx(
+                                  () => Icon(
+                                    Icons.menu_book_rounded,
+                                    size: 40,
+                                    color: c.isDark.isTrue
+                                        ? whiteColor
+                                        : const Color.fromARGB(255, 0, 110, 55),
+                                  ),
+                                ),
+                                onTap: () {},
+                                title: Text(
+                                  data['surah'].toString().replaceAll("+", "'"),
+                                  style: titleTextStyle.copyWith(
+                                    fontWeight: medium,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  "Ayat ${data['ayat']} - via ${data['via']}",
+                                  style: subtitleTextStyle.copyWith(
+                                    fontWeight: medium,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
                   )
                 ],
               ),

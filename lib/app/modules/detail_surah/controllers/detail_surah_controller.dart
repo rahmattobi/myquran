@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
 import 'package:myquran/app/data/models/db/bookmark.dart';
+import 'package:myquran/theme.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../data/models/detail_surah_m.dart';
@@ -25,7 +28,7 @@ class DetailSurahController extends GetxController {
     } else {
       List checkData = await db.query("bookmark",
           where:
-              "surah = '${surah.name!.transliteration!.id}' and ayat = ${ayat.number!.inSurah} and juz = ${ayat.meta!.juz} and index_ayat = $indexAyat and last_read = 0");
+              "surah = '${surah.name!.transliteration!.id!.replaceAll("'", "+")}' and ayat = ${ayat.number!.inSurah} and juz = ${ayat.meta!.juz} and index_ayat = $indexAyat and last_read = 0");
       if (checkData.isNotEmpty) {
         testData = true;
       }
@@ -35,7 +38,7 @@ class DetailSurahController extends GetxController {
       await db.insert(
         "bookmark",
         {
-          "surah": "${surah.name!.transliteration!.id}",
+          "surah": surah.name!.transliteration!.id!.replaceAll("'", "+"),
           "ayat": ayat.number!.inSurah,
           "juz": ayat.meta!.juz,
           "via": "surah",
@@ -48,7 +51,12 @@ class DetailSurahController extends GetxController {
       Get.snackbar("Berhasil", "Berhasil Menambahkan Bookmark");
     } else {
       Get.back();
-      Get.snackbar("Ada Kesalahan", "Bookmark Sudah Tersedia");
+      Get.snackbar(
+        "Ada Kesalahan",
+        "Bookmark Sudah Tersedia",
+        backgroundColor: Colors.red,
+        colorText: whiteColor,
+      );
     }
     var data = await db.query("bookmark");
     print(data);
