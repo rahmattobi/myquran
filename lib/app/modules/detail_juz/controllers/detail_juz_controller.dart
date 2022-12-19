@@ -5,10 +5,16 @@ import 'package:myquran/app/data/models/juz_m.dart';
 class DetailJuzController extends GetxController {
   int index = 0;
   final player = AudioPlayer();
+  Verses? lastVerse;
 
   void playAudio(Verses? ayat) async {
     if (ayat!.audio!.primary!.isNotEmpty) {
       try {
+        lastVerse ??= ayat;
+        lastVerse!.statusAudio = "stop";
+        lastVerse = ayat;
+        lastVerse!.statusAudio = "stop";
+        update();
         await player.stop();
         await player.setUrl(ayat.audio!.primary!);
         ayat.statusAudio = "playing";

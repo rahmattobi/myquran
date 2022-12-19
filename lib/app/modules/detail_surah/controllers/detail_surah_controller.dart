@@ -3,12 +3,56 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
+import 'package:myquran/app/data/models/db/bookmark.dart';
+import 'package:sqflite/sqflite.dart';
 
 import '../../../data/models/detail_surah_m.dart';
 
 class DetailSurahController extends GetxController {
   final player = AudioPlayer();
-  // RxString statusAudio = "stop".obs;
+  Verse? lastVerse;
+
+  DatabaseManager databaseManager = DatabaseManager.instance;
+
+  void addBookmark(
+      bool lastRead, DetailSurah surah, Verse ayat, int indexAyat) async {
+    Database db = await databaseManager.db;
+
+    bool testData = false;
+
+    if (lastRead == true) {
+      db.delete("bookmark", where: "last_read == 1");
+    } else {
+      List checkData = await db.query("bookmark",
+          where:
+              "surah = '${surah.name!.transliteration!.id}' and ayat = ${ayat.number!.inSurah} and juz = ${ayat.meta!.juz} and index_ayat = $indexAyat and last_read = 0");
+      if (checkData.isNotEmpty) {
+        testData = true;
+      }
+    }
+
+    if (testData == false) {
+      await db.insert(
+        "bookmark",
+        {
+          "surah": "${surah.name!.transliteration!.id}",
+          "ayat": ayat.number!.inSurah,
+          "juz": ayat.meta!.juz,
+          "via": "surah",
+          "index_ayat": indexAyat,
+          "last_read": lastRead == true ? 1 : 0
+        },
+      );
+
+      Get.back();
+      Get.snackbar("Berhasil", "Berhasil Menambahkan Bookmark");
+    } else {
+      Get.back();
+      Get.snackbar("Ada Kesalahan", "Bookmark Sudah Tersedia");
+    }
+    var data = await db.query("bookmark");
+    print(data);
+  }
 
   Future<DetailSurah> getAyat(String id) async {
     Uri url = Uri.parse('https://api.quran.gading.dev/surah/$id');
@@ -24,6 +68,11 @@ class DetailSurahController extends GetxController {
   void playAudio(Verse? ayat) async {
     if (ayat!.audio!.primary!.isNotEmpty) {
       try {
+        lastVerse ??= ayat;
+        lastVerse!.statusAudio = "stop";
+        lastVerse = ayat;
+        lastVerse!.statusAudio = "stop";
+        update();
         await player.stop();
         await player.setUrl(ayat.audio!.primary!);
         ayat.statusAudio = "playing";

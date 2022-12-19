@@ -203,7 +203,46 @@ class DetailSurahView extends GetView<DetailSurahController> {
                                               ],
                                             ),
                                       IconButton(
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          Get.defaultDialog(
+                                            title: "BOOKMARK",
+                                            middleText: "Pilih Jenis Bookmark",
+                                            middleTextStyle:
+                                                primaryTextStyle.copyWith(
+                                              color: Colors.grey,
+                                            ),
+                                            actions: [
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  c.addBookmark(
+                                                    true,
+                                                    snapshot.data!,
+                                                    ayat,
+                                                    index,
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: primaryColor,
+                                                ),
+                                                child: const Text('Last Read'),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () {
+                                                  c.addBookmark(
+                                                    false,
+                                                    snapshot.data!,
+                                                    ayat,
+                                                    index,
+                                                  );
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: primaryColor,
+                                                ),
+                                                child: const Text('Bookmark'),
+                                              ),
+                                            ],
+                                          );
+                                        },
                                         icon: Icon(
                                           Icons.bookmark_border,
                                           color: homeC.isDark.isTrue
