@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:just_audio/just_audio.dart';
 import 'package:myquran/app/data/models/db/bookmark.dart';
+import 'package:myquran/app/modules/home/controllers/home_controller.dart';
 import 'package:myquran/theme.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -13,7 +13,7 @@ import '../../../data/models/detail_surah_m.dart';
 class DetailSurahController extends GetxController {
   final player = AudioPlayer();
   Verse? lastVerse;
-
+  final homeC = Get.find<HomeController>();
   DatabaseManager databaseManager = DatabaseManager.instance;
 
   void addBookmark(
@@ -47,18 +47,24 @@ class DetailSurahController extends GetxController {
       );
 
       Get.back();
-      Get.snackbar("Berhasil", "Berhasil Menambahkan Bookmark");
+      homeC.update();
+      Get.snackbar(
+        "Berhasil",
+        "Berhasil Menambahkan Bookmark / Last Read",
+        colorText: whiteColor,
+        backgroundColor: successColor,
+      );
     } else {
       Get.back();
       Get.snackbar(
         "Ada Kesalahan",
         "Bookmark Sudah Tersedia",
-        backgroundColor: Colors.red,
+        backgroundColor: dangerColor,
         colorText: whiteColor,
       );
     }
-    var data = await db.query("bookmark");
-    print(data);
+    // var data = await db.query("bookmark");
+    // print(data);
   }
 
   Future<DetailSurah> getAyat(String id) async {

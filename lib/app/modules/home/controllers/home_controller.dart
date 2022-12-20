@@ -38,12 +38,44 @@ class HomeController extends GetxController {
     return allBookmark;
   }
 
+  Future<Map<String, dynamic>?> getLastRead() async {
+    Database db = await dbM.db;
+    List<Map<String, dynamic>> lastRead = await db.query(
+      "bookmark",
+      where: "last_read = 1",
+    );
+
+    if (lastRead.isEmpty) {
+      return null;
+    } else {
+      return lastRead.first;
+    }
+  }
+
   void deleteBookmark(int id) async {
     Database db = await dbM.db;
     await db.delete("bookmark", where: "id= $id");
     update();
-    Get.snackbar("Berhasil", "Berhasil Menghapus Bookmark",
-        backgroundColor: primaryColor);
+    Get.snackbar(
+      "Berhasil",
+      "Berhasil Menghapus Bookmark",
+      backgroundColor: successColor,
+      colorText: whiteColor,
+    );
+  }
+
+  void deleteLastRead(int id) async {
+    Database db = await dbM.db;
+    await db.delete("bookmark", where: "id= $id");
+    update();
+    Get.back();
+
+    Get.snackbar(
+      "Berhasil",
+      "Berhasil Menghapus Terakhir dibaca",
+      backgroundColor: successColor,
+      colorText: whiteColor,
+    );
   }
 
   List<Surah> allSurah = [];

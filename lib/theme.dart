@@ -6,6 +6,8 @@ Color subtitleColor = const Color(0xff8789A3);
 Color titleColor = const Color(0xff240F4F);
 Color whiteColor = Colors.white;
 Color darkColor = const Color(0xff023020);
+Color successColor = const Color(0xff198754);
+Color dangerColor = const Color(0xffDC3545);
 
 TextStyle primaryTextStyle = GoogleFonts.poppins(
   // color: primaryColor,
@@ -63,7 +65,6 @@ ThemeData lightTheme = ThemeData(
         color: primaryColor,
       ),
       foregroundColor: primaryColor,
-
     ),
     listTileTheme: ListTileThemeData(
       textColor: primaryColor,

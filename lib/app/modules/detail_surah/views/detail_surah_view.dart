@@ -204,43 +204,129 @@ class DetailSurahView extends GetView<DetailSurahController> {
                                             ),
                                       IconButton(
                                         onPressed: () {
-                                          Get.defaultDialog(
-                                            title: "BOOKMARK",
-                                            middleText: "Pilih Jenis Bookmark",
-                                            middleTextStyle:
-                                                primaryTextStyle.copyWith(
-                                              color: Colors.grey,
+                                          showModalBottomSheet(
+                                            context: context,
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.vertical(
+                                                top: Radius.circular(25.0),
+                                              ),
                                             ),
-                                            actions: [
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  c.addBookmark(
-                                                    true,
-                                                    snapshot.data!,
-                                                    ayat,
-                                                    index,
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: primaryColor,
-                                                ),
-                                                child: const Text('Last Read'),
+                                            builder: (context) => Container(
+                                              height: 200,
+                                              margin: EdgeInsets.only(
+                                                top: defaultMargin,
+                                                left: defaultMargin,
+                                                right: defaultMargin,
                                               ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  c.addBookmark(
-                                                    false,
-                                                    snapshot.data!,
-                                                    ayat,
-                                                    index,
-                                                  );
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: primaryColor,
-                                                ),
-                                                child: const Text('Bookmark'),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Center(
+                                                    child: Container(
+                                                      width: 30,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          width: 2,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Center(
+                                                    child: Text(
+                                                      'Qs. ${data.name!.transliteration!.id} : Ayat ${ayat.number!.inSurah}',
+                                                      style: primaryTextStyle
+                                                          .copyWith(
+                                                        fontSize: 16,
+                                                        color:
+                                                            homeC.isDark.isTrue
+                                                                ? whiteColor
+                                                                : titleColor,
+                                                        fontWeight: semiBold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 10,
+                                                  ),
+                                                  const Divider(
+                                                    color: Colors.grey,
+                                                    height: 2,
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      c.addBookmark(
+                                                        false,
+                                                        snapshot.data!,
+                                                        ayat,
+                                                        index,
+                                                      );
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .add_box_outlined,
+                                                          color: subtitleColor,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          'Tambah ke Bookmark',
+                                                          style:
+                                                              subtitleTextStyle
+                                                                  .copyWith(
+                                                            fontWeight:
+                                                                semiBold,
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      c.addBookmark(
+                                                        true,
+                                                        snapshot.data!,
+                                                        ayat,
+                                                        index,
+                                                      );
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .format_line_spacing_outlined,
+                                                          color: subtitleColor,
+                                                        ),
+                                                        const SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        Text(
+                                                          'Tandai Terakhir Baca',
+                                                          style:
+                                                              subtitleTextStyle
+                                                                  .copyWith(
+                                                            fontWeight:
+                                                                semiBold,
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                            ],
+                                            ),
                                           );
                                         },
                                         icon: Icon(

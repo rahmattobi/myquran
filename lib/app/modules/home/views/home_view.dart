@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:myquran/app/data/models/juz_m.dart' as juz;
 import 'package:myquran/app/data/models/surah_m.dart';
 import 'package:shimmer/shimmer.dart';
@@ -106,14 +107,65 @@ class HomeView extends GetView<HomeController> {
             const SizedBox(
               height: 10,
             ),
-            InkWell(
-              onTap: () {
-                Get.toNamed(Routes.lastRead);
+            GetBuilder<HomeController>(
+              builder: (c) {
+                return FutureBuilder<Map<String, dynamic>?>(
+                  future: c.getLastRead(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return SurahCard(
+                        nama: "Loading....",
+                        ayat: 'Loading....',
+                      );
+                    }
+
+                    Map<String, dynamic>? dataLastRead = snapshot.data;
+
+                    if (dataLastRead == null) {
+                      return SurahCard(
+                        nama: "",
+                        ayat: 'Data Terakhir dibaca Kosong...',
+                      );
+                    }
+                    return InkWell(
+                      onTap: () {
+                        print(dataLastRead);
+                      },
+                      child: SurahCard(
+                        nama: dataLastRead['surah']
+                            .toString()
+                            .replaceAll("+", "'"),
+                        ayat:
+                            "Ayat ${dataLastRead['ayat']} - via ${dataLastRead['via']}",
+                      ),
+                      onLongPress: () {
+                        Get.defaultDialog(
+                            title: "Hapus Terakhir Baca",
+                            middleText:
+                                "Apakah Kamu yakin menghapus terakhir dibaca ?",
+                            middleTextStyle: subtitleTextStyle,
+                            actions: [
+                              OutlinedButton(
+                                onPressed: () => Get.back(),
+                                child: Text(
+                                  'Batal',
+                                  style: primaryTextStyle,
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () =>
+                                    c.deleteLastRead(dataLastRead['id']),
+                                child: Text(
+                                  'Hapus',
+                                  style: primaryTextStyle,
+                                ),
+                              )
+                            ]);
+                      },
+                    );
+                  },
+                );
               },
-              child: SurahCard(
-                nama: "Surah Alfatihah",
-                ayat: "Ayat no. 1",
-              ),
             ),
             const SizedBox(
               height: 10,
@@ -382,8 +434,14 @@ class HomeView extends GetView<HomeController> {
                           }
 
                           if (snapshot.data!.isEmpty) {
-                            return const Center(
-                              child: Text('Bookmark belum tersedia'),
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 30),
+                              child: Center(
+                                child: Lottie.asset(
+                                  'assets/lottie/dataerror.json',
+                                ),
+                              ),
                             );
                           }
                           return ListView.builder(

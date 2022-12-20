@@ -191,7 +191,126 @@ class DetailJuzView extends GetView<DetailJuzController> {
                                         ],
                                       ),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(25.0),
+                                        ),
+                                      ),
+                                      builder: (context) => Container(
+                                        height: 200,
+                                        margin: EdgeInsets.only(
+                                          top: defaultMargin,
+                                          left: defaultMargin,
+                                          right: defaultMargin,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Center(
+                                              child: Container(
+                                                width: 30,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    width: 2,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(50),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Center(
+                                              child: Text(
+                                                'Qs. ${allSurahInJuz[controller.index].name!.transliteration!.id} : Ayat ${ayat.number!.inSurah}',
+                                                style:
+                                                    primaryTextStyle.copyWith(
+                                                  fontSize: 16,
+                                                  color: homeC.isDark.isTrue
+                                                      ? whiteColor
+                                                      : titleColor,
+                                                  fontWeight: semiBold,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 10,
+                                            ),
+                                            const Divider(
+                                              color: Colors.grey,
+                                              height: 2,
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                controller.addBookmark(
+                                                  false,
+                                                  allSurahInJuz[
+                                                      controller.index],
+                                                  ayat,
+                                                  index,
+                                                );
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.add_box_outlined,
+                                                    color: subtitleColor,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    'Tambah ke Bookmark',
+                                                    style: subtitleTextStyle
+                                                        .copyWith(
+                                                      fontWeight: semiBold,
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                c.addBookmark(
+                                                  true,
+                                                  allSurahInJuz[
+                                                      controller.index],
+                                                  ayat,
+                                                  index,
+                                                );
+                                              },
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons
+                                                        .format_line_spacing_outlined,
+                                                    color: subtitleColor,
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    'Tandai Terakhir Baca',
+                                                    style: subtitleTextStyle
+                                                        .copyWith(
+                                                      fontWeight: semiBold,
+                                                      fontSize: 15,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   icon: Icon(
                                     Icons.bookmark_border,
                                     color: homeC.isDark.isTrue
