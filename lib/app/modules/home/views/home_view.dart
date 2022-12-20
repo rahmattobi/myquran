@@ -415,6 +415,18 @@ class HomeView extends GetView<HomeController> {
                                     fontSize: 12,
                                   ),
                                 ),
+                                trailing: Obx(() => InkWell(
+                                      onTap: () {
+                                        c.deleteBookmark(data['id']);
+                                      },
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: c.isDark.isTrue
+                                            ? whiteColor
+                                            : const Color.fromARGB(
+                                                255, 0, 110, 55),
+                                      ),
+                                    )),
                               );
                             },
                           );

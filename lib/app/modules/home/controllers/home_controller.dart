@@ -38,6 +38,14 @@ class HomeController extends GetxController {
     return allBookmark;
   }
 
+  void deleteBookmark(int id) async {
+    Database db = await dbM.db;
+    await db.delete("bookmark", where: "id= $id");
+    update();
+    Get.snackbar("Berhasil", "Berhasil Menghapus Bookmark",
+        backgroundColor: primaryColor);
+  }
+
   List<Surah> allSurah = [];
   Future<List<Surah>?> getAllSurah() async {
     Uri url = Uri.parse('https://api.quran.gading.dev/surah');
