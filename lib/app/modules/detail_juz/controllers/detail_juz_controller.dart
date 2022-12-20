@@ -15,8 +15,7 @@ class DetailJuzController extends GetxController {
   DatabaseManager databaseManager = DatabaseManager.instance;
   final homeC = Get.find<HomeController>();
 
-
-void addBookmark(
+  void addBookmark(
       bool lastRead, Surah surah, Verses ayat, int indexAyat) async {
     Database db = await databaseManager.db;
 
@@ -27,7 +26,7 @@ void addBookmark(
     } else {
       List checkData = await db.query("bookmark",
           where:
-              "surah = '${surah.name!.transliteration!.id!.replaceAll("'", "+")}' and ayat = ${ayat.number!.inSurah} and juz = ${ayat.meta!.juz} and index_ayat = $indexAyat and last_read = 0");
+              "surah = '${surah.name!.transliteration!.id!.replaceAll("'", "+")}' and number_surah = ${surah.number!} and ayat = ${ayat.number!.inSurah} and juz = ${ayat.meta!.juz} and index_ayat = $indexAyat and last_read = 0");
       if (checkData.isNotEmpty) {
         testData = true;
       }
@@ -38,6 +37,7 @@ void addBookmark(
         "bookmark",
         {
           "surah": surah.name!.transliteration!.id!.replaceAll("'", "+"),
+          "number_surah": surah.number!,
           "ayat": ayat.number!.inSurah,
           "juz": ayat.meta!.juz,
           "via": "Juz",
@@ -63,8 +63,8 @@ void addBookmark(
         colorText: whiteColor,
       );
     }
-    // var data = await db.query("bookmark");
-    // print(data);
+    var data = await db.query("bookmark");
+    print(data);
   }
 
   void playAudio(Verses? ayat) async {

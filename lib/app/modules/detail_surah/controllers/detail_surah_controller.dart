@@ -6,11 +6,13 @@ import 'package:just_audio/just_audio.dart';
 import 'package:myquran/app/data/models/db/bookmark.dart';
 import 'package:myquran/app/modules/home/controllers/home_controller.dart';
 import 'package:myquran/theme.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../data/models/detail_surah_m.dart';
 
 class DetailSurahController extends GetxController {
+  AutoScrollController scrollC = AutoScrollController();
   final player = AudioPlayer();
   Verse? lastVerse;
   final homeC = Get.find<HomeController>();
@@ -27,7 +29,7 @@ class DetailSurahController extends GetxController {
     } else {
       List checkData = await db.query("bookmark",
           where:
-              "surah = '${surah.name!.transliteration!.id!.replaceAll("'", "+")}' and ayat = ${ayat.number!.inSurah} and juz = ${ayat.meta!.juz} and index_ayat = $indexAyat and last_read = 0");
+              "surah = '${surah.name!.transliteration!.id!.replaceAll("'", "+")}' and number_surah = ${surah.number!} and ayat = ${ayat.number!.inSurah} and juz = ${ayat.meta!.juz} and index_ayat = $indexAyat and last_read = 0");
       if (checkData.isNotEmpty) {
         testData = true;
       }
@@ -38,6 +40,7 @@ class DetailSurahController extends GetxController {
         "bookmark",
         {
           "surah": surah.name!.transliteration!.id!.replaceAll("'", "+"),
+          "number_surah": surah.number!,
           "ayat": ayat.number!.inSurah,
           "juz": ayat.meta!.juz,
           "via": "surah",
@@ -63,8 +66,8 @@ class DetailSurahController extends GetxController {
         colorText: whiteColor,
       );
     }
-    // var data = await db.query("bookmark");
-    // print(data);
+    var data = await db.query("bookmark");
+    print(data);
   }
 
   Future<DetailSurah> getAyat(String id) async {

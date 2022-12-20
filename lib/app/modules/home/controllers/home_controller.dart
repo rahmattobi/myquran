@@ -34,6 +34,7 @@ class HomeController extends GetxController {
     List<Map<String, dynamic>> allBookmark = await db.query(
       "bookmark",
       where: "last_read = 0",
+      orderBy: "surah",
     );
     return allBookmark;
   }

@@ -248,7 +248,10 @@ class HomeView extends GetView<HomeController> {
                             onTap: () {
                               Get.toNamed(
                                 Routes.detailSurah,
-                                arguments: surah,
+                                arguments: {
+                                  "name": surah.name!.transliteration!.id,
+                                  "number": surah.number,
+                                },
                               );
                             },
                             leading: Obx(
@@ -458,7 +461,16 @@ class HomeView extends GetView<HomeController> {
                                         : const Color.fromARGB(255, 0, 110, 55),
                                   ),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  Get.toNamed(
+                                    Routes.detailSurah,
+                                    arguments: {
+                                      "name": data["surah"],
+                                      "number": data["number_surah"],
+                                      "bookmark": data,
+                                    },
+                                  );
+                                },
                                 title: Text(
                                   data['surah'].toString().replaceAll("+", "'"),
                                   style: titleTextStyle.copyWith(

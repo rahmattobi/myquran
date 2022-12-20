@@ -5,107 +5,63 @@ import 'package:myquran/app/data/models/detail_surah_m.dart' as detail;
 import 'package:myquran/app/modules/home/controllers/home_controller.dart';
 import 'package:myquran/app/modules/widget/surah_tile.dart';
 import 'package:myquran/theme.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
-import '../../../data/models/surah_m.dart';
 import '../controllers/detail_surah_controller.dart';
 
 // ignore: must_be_immutable
 class DetailSurahView extends GetView<DetailSurahController> {
   DetailSurahView({super.key});
-
-  final Surah data = Get.arguments;
+  Map<String, dynamic>? bookmark;
   var homeC = Get.find<HomeController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Surah ${data.name!.transliteration!.id}',
-          style: titleTextStyle.copyWith(
-            fontSize: 18,
-            fontWeight: bold,
+        appBar: AppBar(
+          title: Text(
+            'SURAH ${Get.arguments['name'].toString().toUpperCase()}',
+            style: titleTextStyle.copyWith(
+              fontSize: 18,
+              fontWeight: bold,
+            ),
           ),
+          centerTitle: true,
+          elevation: 0,
         ),
-        centerTitle: true,
-        elevation: 0,
-      ),
-      body: ListView(
-        children: [
-          Container(
-            margin: EdgeInsets.only(
-              right: defaultMargin - 5,
-              left: defaultMargin - 5,
-              top: 10,
-            ),
-            child: InkWell(
-              onTap: () => Get.defaultDialog(
-                title: "Tafsir ${data.name!.transliteration!.id}",
-                titleStyle: titleTextStyle.copyWith(
-                  fontSize: 20,
-                  fontWeight: bold,
-                ),
-                content: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        left: 8.0,
-                        right: 8.0,
-                        bottom: 8.0,
-                      ),
-                      child: Text(
-                        '${data.tafsir!.id}',
-                        style: subtitleTextStyle.copyWith(
-                          fontWeight: medium,
-                        ),
-                        textAlign: TextAlign.justify,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              child: SurahTile(
-                nama: data.name!.transliteration!.id,
-                arti: data.name!.translation!.id,
-                ayat: data.numberOfVerses.toString(),
-                type: data.revelation!.id,
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 32,
-          ),
-          FutureBuilder<detail.DetailSurah>(
-            future: controller.getAyat(
-              data.number.toString(),
-            ),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+        body: FutureBuilder<detail.DetailSurah>(
+          future: controller.getAyat(Get.arguments['number'].toString()),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
 
-              // untuk mengcheck apakah ada data
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: Text('Tidak Mempunyai data'),
-                );
-              }
+            if (!snapshot.hasData) {
+              return const Center(
+                child: Text('Tidak Mempunyai data'),
+              );
+            }
+            if (Get.arguments['bookmark'] != null) {
+              bookmark = Get.arguments['bookmark'];
+              controller.scrollC.scrollToIndex(
+                bookmark!['index_ayat'] + 2,
+                preferPosition: AutoScrollPosition.begin,
+              );
+            }
 
-              return ListView.builder(
-                padding: EdgeInsets.only(
-                  left: defaultMargin,
-                  right: defaultMargin,
-                ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data?.verses?.length ?? 0,
-                itemBuilder: (context, index) {
-                  if (snapshot.data!.verses!.isEmpty) {
-                    return const SizedBox();
-                  }
-                  detail.Verse? ayat = snapshot.data?.verses?[index];
-                  return Column(
+            detail.DetailSurah data = snapshot.data!;
+            List<Widget> allAyat =
+                List.generate(snapshot.data?.verses?.length ?? 0, (index) {
+              detail.Verse? ayat = snapshot.data?.verses?[index];
+              return AutoScrollTag(
+                key: ValueKey(index + 2),
+                index: index + 2,
+                controller: controller.scrollC,
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: defaultMargin - 5),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Container(
@@ -383,13 +339,70 @@ class DetailSurahView extends GetView<DetailSurahController> {
                         height: defaultMargin,
                       ),
                     ],
-                  );
-                },
+                  ),
+                ),
               );
-            },
-          )
-        ],
-      ),
-    );
+            });
+            return ListView(
+              controller: controller.scrollC,
+              children: [
+                AutoScrollTag(
+                  key: const ValueKey(0),
+                  index: 0,
+                  controller: controller.scrollC,
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      right: defaultMargin - 5,
+                      left: defaultMargin - 5,
+                      top: 10,
+                    ),
+                    child: InkWell(
+                      onTap: () => Get.defaultDialog(
+                        title: "Tafsir ${data.name!.transliteration!.id}",
+                        titleStyle: titleTextStyle.copyWith(
+                          fontSize: 20,
+                          fontWeight: bold,
+                        ),
+                        content: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8.0,
+                                right: 8.0,
+                                bottom: 8.0,
+                              ),
+                              child: Text(
+                                '${data.tafsir!.id}',
+                                style: subtitleTextStyle.copyWith(
+                                  fontWeight: medium,
+                                ),
+                                textAlign: TextAlign.justify,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      child: SurahTile(
+                        nama: data.name!.transliteration!.id,
+                        arti: data.name!.translation!.id,
+                        ayat: data.numberOfVerses.toString(),
+                        type: data.revelation!.id,
+                      ),
+                    ),
+                  ),
+                ),
+                AutoScrollTag(
+                  key: const ValueKey(1),
+                  index: 1,
+                  controller: controller.scrollC,
+                  child: const SizedBox(
+                    height: 32,
+                  ),
+                ),
+                ...allAyat
+              ],
+            );
+          },
+        ));
   }
 }
