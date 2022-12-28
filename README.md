@@ -1,16 +1,9 @@
 # myquran
+Aplikasi Qur'anku berbasis mobile App dengan menggunakan Flutter 
 
-A new Flutter project.
+Data di ambil dari : https://api.quran.gading.dev/
 
-## Getting Started
+Referensi Design : https://www.figma.com/community/file/966921639679380402
 
-This project is a starting point for a Flutter application.
+Demo Aplikasi : https://www.linkedin.com/posts/rahmat-tobi-hidayat-703018196_flutter-dart-mobile-activity-7013434622390784000-xI7V?utm_source=share&utm_medium=member_desktop
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
