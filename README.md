@@ -17,3 +17,6 @@ Demo Aplikasi : https://www.linkedin.com/posts/rahmat-tobi-hidayat-703018196_flu
 ![image](https://user-images.githubusercontent.com/49316783/209751983-d13bcb37-af12-406f-9d07-e61857ee8688.png)
 ![image](https://user-images.githubusercontent.com/49316783/209752013-d8fe0bfc-14ae-4fb8-95aa-f036e0b917df.png)
 ![image](https://user-images.githubusercontent.com/49316783/209752084-90587cbb-48b9-4959-81d9-28c5c5814cc9.png)
+![image](https://user-images.githubusercontent.com/49316783/209752140-4b1d7ee9-3e93-4cc8-ba95-5d5239439e7e.png)
+![image](https://user-images.githubusercontent.com/49316783/209752155-e70a9d2e-dd9a-4cf6-8a95-1fa640c117cd.png)
+![image](https://user-images.githubusercontent.com/49316783/209752170-707ddfca-b4aa-4b24-9919-52264e37119d.png)
