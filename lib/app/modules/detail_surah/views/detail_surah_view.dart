@@ -14,7 +14,6 @@ class DetailSurahView extends GetView<DetailSurahController> {
   DetailSurahView({super.key});
   Map<String, dynamic>? bookmark;
   var homeC = Get.find<HomeController>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

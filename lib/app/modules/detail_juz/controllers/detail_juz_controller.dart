@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:myquran/app/data/models/juz_m.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:sqflite/sqflite.dart';
 
 import '../../../../theme.dart';
@@ -9,6 +10,8 @@ import '../../../data/models/surah_m.dart';
 import '../../home/controllers/home_controller.dart';
 
 class DetailJuzController extends GetxController {
+  AutoScrollController scrollC = AutoScrollController();
+  
   int index = 0;
   final player = AudioPlayer();
   Verses? lastVerse;

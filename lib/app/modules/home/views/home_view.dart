@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:myquran/app/data/models/juz_m.dart' as juz;
 import 'package:myquran/app/data/models/surah_m.dart';
@@ -12,11 +13,13 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     if (Get.isDarkMode) {
       controller.isDark.value = true;
     }
+
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -34,7 +37,7 @@ class HomeView extends GetView<HomeController> {
         centerTitle: true,
         elevation: 0,
         title: Text(
-          'My Qur\'an',
+          'Qur\'anku',
           style: primaryTextStyle.copyWith(
             fontSize: 20,
             fontWeight: bold,
@@ -44,68 +47,35 @@ class HomeView extends GetView<HomeController> {
       body: DefaultTabController(
         length: 3,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Obx(
-              () => Container(
-                height: 60,
-                margin: EdgeInsets.only(
-                  top: 10,
-                  left: defaultMargin - 10,
-                  right: defaultMargin - 10,
-                ),
-                decoration: BoxDecoration(
-                  color: controller.isDark.isTrue ? darkColor : whiteColor,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                      color: controller.isDark.isTrue
-                          ? primaryColor.withOpacity(0.3)
-                          : subtitleColor.withOpacity(0.3),
+            Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: defaultMargin,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Assalamu'alaikum",
+                    style: titleTextStyle.copyWith(
+                      fontWeight: bold,
+                      fontSize: 18,
+                      color: successColor,
                     ),
-                  ],
-                ),
-                child: Container(
-                  height: 60,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 5,
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.search,
-                        color: controller.isDark.isTrue
-                            ? whiteColor
-                            : subtitleColor,
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration.collapsed(
-                            hintText: 'Cari Doa',
-                            hintStyle: subtitleTextStyle.copyWith(
-                              fontSize: 15,
-                              color: controller.isDark.isTrue
-                                  ? whiteColor
-                                  : subtitleColor,
-                            ),
-                          ),
-                          onChanged: ((value) {
-                            // searchDoa(value);
-                          }),
-                        ),
-                      )
-                    ],
+                  Text(
+                    DateFormat.yMMMMEEEEd().format(DateTime.now()),
+                    style: subtitleTextStyle.copyWith(
+                      fontWeight: semiBold,
+                      color: Colors.grey[400],
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 15,
             ),
             GetBuilder<HomeController>(
               builder: (c) {
@@ -127,42 +97,97 @@ class HomeView extends GetView<HomeController> {
                         ayat: 'Data Terakhir dibaca Kosong...',
                       );
                     }
-                    return InkWell(
-                      onTap: () {
-                        print(dataLastRead);
-                      },
-                      child: SurahCard(
-                        nama: dataLastRead['surah']
-                            .toString()
-                            .replaceAll("+", "'"),
-                        ayat:
-                            "Ayat ${dataLastRead['ayat']} - via ${dataLastRead['via']}",
-                      ),
-                      onLongPress: () {
-                        Get.defaultDialog(
-                            title: "Hapus Terakhir Baca",
-                            middleText:
-                                "Apakah Kamu yakin menghapus terakhir dibaca ?",
-                            middleTextStyle: subtitleTextStyle,
-                            actions: [
-                              OutlinedButton(
-                                onPressed: () => Get.back(),
-                                child: Text(
-                                  'Batal',
-                                  style: primaryTextStyle,
+                    if (c.dataJuzBookmark = false) {
+                      return SurahCard(
+                        nama: "",
+                        ayat: 'Data Juz Masih Loading...',
+                      );
+                    } else {
+                      return InkWell(
+                        onTap: () {
+                          switch (dataLastRead["via"]) {
+                            case "Juz":
+                              juz.Juz dataJuz =
+                                  controller.juz[dataLastRead["juz"] - 1];
+
+                              String surahStart =
+                                  dataJuz.juzStartInfo?.split(" - ").first ??
+                                      "";
+                              String surahEnd =
+                                  dataJuz.juzEndInfo?.split(" - ").first ?? "";
+
+                              List<Surah> rawSurahinJuz = [];
+                              List<Surah> allSurahinJuz = [];
+
+                              for (Surah item in controller.allSurah) {
+                                rawSurahinJuz.add(item);
+                                if (item.name!.transliteration!.id ==
+                                    surahEnd) {
+                                  break;
+                                }
+                              }
+
+                              for (Surah item
+                                  in rawSurahinJuz.reversed.toList()) {
+                                allSurahinJuz.add(item);
+                                if (item.name!.transliteration!.id ==
+                                    surahStart) {
+                                  break;
+                                }
+                              }
+                              Get.toNamed(
+                                Routes.detailJuz,
+                                arguments: {
+                                  "juz": dataJuz,
+                                  "surah": allSurahinJuz.reversed.toList(),
+                                  "bookmark": dataLastRead,
+                                },
+                              );
+                              break;
+                            default:
+                              Get.toNamed(
+                                Routes.detailSurah,
+                                arguments: {
+                                  "name": dataLastRead["surah"],
+                                  "number": dataLastRead["number_surah"],
+                                  "bookmark": dataLastRead,
+                                },
+                              );
+                          }
+                        },
+                        child: SurahCard(
+                          nama: dataLastRead['surah']
+                              .toString()
+                              .replaceAll("+", "'"),
+                          ayat:
+                              "Ayat ${dataLastRead['ayat']} | juz ${dataLastRead['juz']} - via ${dataLastRead['via']}",
+                        ),
+                        onLongPress: () {
+                          Get.defaultDialog(
+                              title: "Hapus Terakhir Baca",
+                              middleText:
+                                  "Apakah Kamu yakin menghapus terakhir dibaca ?",
+                              middleTextStyle: subtitleTextStyle,
+                              actions: [
+                                OutlinedButton(
+                                  onPressed: () => Get.back(),
+                                  child: Text(
+                                    'Batal',
+                                    style: primaryTextStyle,
+                                  ),
                                 ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () =>
-                                    c.deleteLastRead(dataLastRead['id']),
-                                child: Text(
-                                  'Hapus',
-                                  style: primaryTextStyle,
-                                ),
-                              )
-                            ]);
-                      },
-                    );
+                                ElevatedButton(
+                                  onPressed: () =>
+                                      c.deleteLastRead(dataLastRead['id']),
+                                  child: Text(
+                                    'Hapus',
+                                    style: primaryTextStyle,
+                                  ),
+                                )
+                              ]);
+                        },
+                      );
+                    }
                   },
                 );
               },
@@ -306,6 +331,7 @@ class HomeView extends GetView<HomeController> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
+                          controller.dataJuzBookmark = false;
                           return ListView.builder(
                             itemBuilder: (context, index) {
                               return Shimmer.fromColors(
@@ -333,11 +359,12 @@ class HomeView extends GetView<HomeController> {
                             child: Text('Tidak Mempunyai data'),
                           );
                         }
+
+                        controller.dataJuzBookmark = true;
                         return ListView.builder(
                           itemCount: 30,
                           itemBuilder: (context, index) {
                             juz.Juz detailJuz = snapshot.data![index];
-
                             //Get surah in juz
                             String surahStart =
                                 detailJuz.juzStartInfo?.split(" - ").first ??
@@ -345,8 +372,8 @@ class HomeView extends GetView<HomeController> {
                             String surahEnd =
                                 detailJuz.juzEndInfo?.split(" - ").first ?? "";
 
-                            List<Surah> allSurahinJuz = [];
                             List<Surah> rawSurahinJuz = [];
+                            List<Surah> allSurahinJuz = [];
 
                             for (Surah item in controller.allSurah) {
                               rawSurahinJuz.add(item);
@@ -426,82 +453,155 @@ class HomeView extends GetView<HomeController> {
                       }),
                   GetBuilder<HomeController>(
                     builder: (c) {
-                      return FutureBuilder<List<Map<String, dynamic>>?>(
-                        future: c.getAllBookmark(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-
-                          if (snapshot.data!.isEmpty) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
-                              child: Center(
-                                child: Lottie.asset(
-                                  'assets/lottie/dataerror.json',
-                                ),
+                      if (c.dataJuzBookmark = false) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const CircularProgressIndicator(),
+                              const SizedBox(
+                                height: 20,
                               ),
-                            );
-                          }
-                          return ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              Map<String, dynamic> data = snapshot.data![index];
-                              return ListTile(
-                                leading: Obx(
-                                  () => Icon(
-                                    Icons.menu_book_rounded,
-                                    size: 40,
-                                    color: c.isDark.isTrue
-                                        ? whiteColor
-                                        : const Color.fromARGB(255, 0, 110, 55),
-                                  ),
+                              Text(
+                                'Data Juz masih Loading...',
+                                style: primaryTextStyle.copyWith(
+                                  fontWeight: medium,
+                                  fontSize: 16,
                                 ),
-                                onTap: () {
-                                  Get.toNamed(
-                                    Routes.detailSurah,
-                                    arguments: {
-                                      "name": data["surah"],
-                                      "number": data["number_surah"],
-                                      "bookmark": data,
-                                    },
-                                  );
-                                },
-                                title: Text(
-                                  data['surah'].toString().replaceAll("+", "'"),
-                                  style: titleTextStyle.copyWith(
-                                    fontWeight: medium,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  "Ayat ${data['ayat']} - via ${data['via']}",
-                                  style: subtitleTextStyle.copyWith(
-                                    fontWeight: medium,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                trailing: Obx(() => InkWell(
-                                      onTap: () {
-                                        c.deleteBookmark(data['id']);
-                                      },
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: c.isDark.isTrue
-                                            ? whiteColor
-                                            : const Color.fromARGB(
-                                                255, 0, 110, 55),
-                                      ),
-                                    )),
+                              )
+                            ],
+                          ),
+                        );
+                      } else {
+                        return FutureBuilder<List<Map<String, dynamic>>?>(
+                          future: c.getAllBookmark(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
                               );
-                            },
-                          );
-                        },
-                      );
+                            }
+
+                            if (snapshot.data!.isEmpty) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: Center(
+                                  child: Lottie.asset(
+                                    'assets/lottie/dataerror.json',
+                                  ),
+                                ),
+                              );
+                            }
+                            return ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) {
+                                Map<String, dynamic> data =
+                                    snapshot.data![index];
+                                return ListTile(
+                                  leading: Obx(
+                                    () => Icon(
+                                      Icons.menu_book_rounded,
+                                      size: 40,
+                                      color: c.isDark.isTrue
+                                          ? whiteColor
+                                          : const Color.fromARGB(
+                                              255, 0, 110, 55),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    switch (data["via"]) {
+                                      case "Juz":
+                                        juz.Juz dataJuz =
+                                            controller.juz[data["juz"] - 1];
+
+                                        String surahStart = dataJuz.juzStartInfo
+                                                ?.split(" - ")
+                                                .first ??
+                                            "";
+                                        String surahEnd = dataJuz.juzEndInfo
+                                                ?.split(" - ")
+                                                .first ??
+                                            "";
+
+                                        List<Surah> rawSurahinJuz = [];
+                                        List<Surah> allSurahinJuz = [];
+
+                                        for (Surah item
+                                            in controller.allSurah) {
+                                          rawSurahinJuz.add(item);
+                                          if (item.name!.transliteration!.id ==
+                                              surahEnd) {
+                                            break;
+                                          }
+                                        }
+
+                                        for (Surah item in rawSurahinJuz
+                                            .reversed
+                                            .toList()) {
+                                          allSurahinJuz.add(item);
+                                          if (item.name!.transliteration!.id ==
+                                              surahStart) {
+                                            break;
+                                          }
+                                        }
+                                        Get.toNamed(
+                                          Routes.detailJuz,
+                                          arguments: {
+                                            "juz": dataJuz,
+                                            "surah":
+                                                allSurahinJuz.reversed.toList(),
+                                            "bookmark": data,
+                                          },
+                                        );
+                                        break;
+                                      default:
+                                        Get.toNamed(
+                                          Routes.detailSurah,
+                                          arguments: {
+                                            "name": data["surah"],
+                                            "number": data["number_surah"],
+                                            "bookmark": data,
+                                          },
+                                        );
+                                    }
+                                  },
+                                  title: Text(
+                                    data['surah']
+                                        .toString()
+                                        .replaceAll("+", "'"),
+                                    style: titleTextStyle.copyWith(
+                                      fontWeight: medium,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    "Ayat ${data['ayat']} - via ${data['via']}",
+                                    style: subtitleTextStyle.copyWith(
+                                      fontWeight: medium,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  trailing: Obx(() => InkWell(
+                                        onTap: () {
+                                          c.deleteBookmark(data['id']);
+                                        },
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: c.isDark.isTrue
+                                              ? whiteColor
+                                              : const Color.fromARGB(
+                                                  255, 0, 110, 55),
+                                        ),
+                                      )),
+                                );
+                              },
+                            );
+                          },
+                        );
+                      }
                     },
                   )
                 ],

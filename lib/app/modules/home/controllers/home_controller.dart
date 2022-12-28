@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -11,7 +12,10 @@ import 'package:sqflite/sqflite.dart';
 import '../../../data/models/surah_m.dart';
 
 class HomeController extends GetxController {
-  RxBool isDark = false.obs; // our observable
+  RxBool isDark = false.obs;
+  bool dataJuzBookmark = false;
+  List<Juz> juz = [];
+  Rxn<DateTime> dateValue = Rxn<DateTime>();
 
   // swap true/false & save it to observable
   void toggle() async {
@@ -34,7 +38,7 @@ class HomeController extends GetxController {
     List<Map<String, dynamic>> allBookmark = await db.query(
       "bookmark",
       where: "last_read = 0",
-      orderBy: "surah",
+      orderBy: "surah, via, ayat",
     );
     return allBookmark;
   }
@@ -96,7 +100,6 @@ class HomeController extends GetxController {
   }
 
   Future<List<Juz>?> getAllJuz() async {
-    List<Juz> juz = [];
     for (var id = 1; id <= 30; id++) {
       Uri url = Uri.parse('https://api.quran.gading.dev/juz/$id');
 
